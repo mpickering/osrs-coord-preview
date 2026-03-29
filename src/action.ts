@@ -89,7 +89,11 @@ async function uploadPerImageLinks(manifest: Awaited<ReturnType<typeof renderBat
     }
 
     const successItem = item as RenderSuccess;
-    successItem.publishedImageUrl = await uploadImageTo0x0(successItem.imagePath, successItem.imageName);
+    try {
+      successItem.publishedImageUrl = await uploadImageTo0x0(successItem.imagePath, successItem.imageName);
+    } catch (error) {
+      core.warning(`Failed to publish ${successItem.imageName} to 0x0: ${(error as Error).message}`);
+    }
   }
 }
 
