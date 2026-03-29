@@ -10,7 +10,7 @@ export function buildCommentBody(manifest: RenderManifest): string {
     COMMENT_MARKER,
     "## OSRS coordinate previews",
     "",
-    `Rendered ${manifest.renderCount} preview(s); ${manifest.failedCount} failure(s).`,
+    `Rendered ${pluralize(manifest.renderCount, "preview")}; ${pluralize(manifest.failedCount, "failure")}.`,
     "",
     "| Preview | Item | Coordinate | Source |",
     "| --- | --- | --- | --- |"
@@ -25,8 +25,6 @@ export function buildCommentBody(manifest: RenderManifest): string {
     lines.push(`| ${preview} | ${escapeCell(title)} | ${escapeCell(item.coordinate)} | ${escapeCell(source)} |`);
   }
 
-  lines.push("");
-  lines.push("Images are hosted by the configured renderer service.");
   return lines.join("\n");
 }
 
@@ -74,4 +72,8 @@ function escapeCell(value: string): string {
 
 function escapeAttribute(value: string): string {
   return value.replace(/"/g, "&quot;");
+}
+
+function pluralize(count: number, noun: string): string {
+  return `${count} ${noun}${count === 1 ? "" : "s"}`;
 }
