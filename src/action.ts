@@ -3,7 +3,6 @@ import path from "node:path";
 import * as core from "@actions/core";
 import { postOrUpdateComment } from "./comment.js";
 import { parseCoordinateItems, resolveOutputDir } from "./input.js";
-import { failedItems } from "./manifest.js";
 import { RenderManifest, RenderServiceResponse } from "./types.js";
 
 export interface ActionOptions {
@@ -40,9 +39,8 @@ export async function runAction(options: ActionOptions): Promise<void> {
     await postOrUpdateComment(options.token, manifest);
   }
 
-  const failures = failedItems(manifest);
-  if (failures.length > 0) {
-    throw new Error(`Failed to render ${failures.length} coordinate preview(s).`);
+  if (manifest.failedCount > 0) {
+    core.warning(`Failed to render ${manifest.failedCount} coordinate ${manifest.failedCount === 1 ? "preview" : "previews"}. See manifest and PR comment for details.`);
   }
 }
 
