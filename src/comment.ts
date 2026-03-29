@@ -24,18 +24,27 @@ export function buildCommentBody(manifest: RenderManifest): string {
 
   lines.push("");
   for (const item of manifest.items) {
-    if (item.status !== "success" || !item.artifactUrl) {
+    if (item.status !== "success") {
+      continue;
+    }
+    const previewUrl = item.publishedImageUrl ?? item.artifactUrl;
+    if (!previewUrl) {
       continue;
     }
     lines.push(`### ${item.label ?? item.id}`);
     lines.push("");
-    lines.push(`[Artifact download](${item.artifactUrl})`);
+    if (item.artifactUrl) {
+      lines.push(`[Artifact download](${item.artifactUrl})`);
+    }
+    if (item.publishedImageUrl) {
+      lines.push(`[Published image](${item.publishedImageUrl})`);
+    }
     lines.push("");
-    lines.push(`![${item.label ?? item.id}](${item.artifactUrl})`);
+    lines.push(`![${item.label ?? item.id}](${previewUrl})`);
     lines.push("");
   }
 
-  lines.push("Review the uploaded artifact links above if the inline image attempt does not render.");
+  lines.push("Review the linked artifacts if the inline image attempt does not render.");
   return lines.join("\n");
 }
 
