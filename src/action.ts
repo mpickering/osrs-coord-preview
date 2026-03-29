@@ -6,6 +6,7 @@ import { postOrUpdateComment } from "./comment.js";
 import { parseCoordinateItems, resolveOutputDir } from "./input.js";
 import { failedItems } from "./manifest.js";
 import { renderBatch } from "./render.js";
+import { RenderSuccess } from "./types.js";
 
 export interface ActionOptions {
   coordinatesRaw: string;
@@ -38,6 +39,7 @@ export async function runAction(options: ActionOptions): Promise<void> {
   await client.uploadArtifact(options.artifactName, files, outputDir, {
     retentionDays: 7
   });
+  await uploadPerImageArtifacts(client, manifest);
 
   if (options.comment) {
     if (!options.token) {
@@ -49,6 +51,29 @@ export async function runAction(options: ActionOptions): Promise<void> {
   const failures = failedItems(manifest);
   if (failures.length > 0) {
     throw new Error(`Failed to render ${failures.length} coordinate preview(s).`);
+  }
+}
+
+async function uploadPerImageArtifacts(client: artifact.DefaultArtifactClient, manifest: Awaited<ReturnType<typeof renderBatch>>): Promise<void> {
+  const runId = process.env.GITHUB_RUN_ID;
+  const serverUrl = process.env.GITHUB_SERVER_URL ?? "https://github.com";
+  const repository = process.env.GITHUB_REPOSITORY;
+
+  for (const item of manifest.items) {
+    if (item.status !== "success") {
+      continue;
+    }
+
+    const artifactName = `preview-${item.id}`;
+    const response = await client.uploadArtifact(artifactName, [item.imagePath], path.dirname(item.imagePath), {
+      retentionDays: 7
+    });
+
+    const successItem = item as RenderSuccess;
+    successItem.artifactName = artifactName;
+    if (response.id && runId && repository) {
+      successItem.artifactUrl = `${serverUrl}/${repository}/actions/runs/${runId}/artifacts/${response.id}`;
+    }
   }
 }
 

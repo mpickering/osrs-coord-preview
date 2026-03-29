@@ -32,6 +32,8 @@ export interface RenderSuccess {
   resolved: TileCoordinate;
   imagePath: string;
   imageName: string;
+  artifactName?: string;
+  artifactUrl?: string;
 }
 
 export interface RenderFailure {
