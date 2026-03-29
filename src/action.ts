@@ -5,12 +5,14 @@ import * as core from "@actions/core";
 import { postOrUpdateComment } from "./comment.js";
 import { parseCoordinateItems, resolveOutputDir } from "./input.js";
 import { failedItems } from "./manifest.js";
+import { uploadImageTo0x0 } from "./publish.js";
 import { renderBatch } from "./render.js";
 import { RenderSuccess } from "./types.js";
 
 export interface ActionOptions {
   coordinatesRaw: string;
   comment: boolean;
+  uploadTo0x0: boolean;
   artifactName: string;
   outputDir: string;
   token?: string;
@@ -40,6 +42,9 @@ export async function runAction(options: ActionOptions): Promise<void> {
     retentionDays: 7
   });
   await uploadPerImageArtifacts(client, manifest);
+  if (options.uploadTo0x0) {
+    await uploadPerImageLinks(manifest);
+  }
 
   if (options.comment) {
     if (!options.token) {
@@ -74,6 +79,17 @@ async function uploadPerImageArtifacts(client: artifact.DefaultArtifactClient, m
     if (response.id && runId && repository) {
       successItem.artifactUrl = `${serverUrl}/${repository}/actions/runs/${runId}/artifacts/${response.id}`;
     }
+  }
+}
+
+async function uploadPerImageLinks(manifest: Awaited<ReturnType<typeof renderBatch>>): Promise<void> {
+  for (const item of manifest.items) {
+    if (item.status !== "success") {
+      continue;
+    }
+
+    const successItem = item as RenderSuccess;
+    successItem.publishedImageUrl = await uploadImageTo0x0(successItem.imagePath, successItem.imageName);
   }
 }
 

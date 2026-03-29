@@ -34,6 +34,7 @@ export interface RenderSuccess {
   imageName: string;
   artifactName?: string;
   artifactUrl?: string;
+  publishedImageUrl?: string;
 }
 
 export interface RenderFailure {

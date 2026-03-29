@@ -11,6 +11,10 @@ inputs:
   github-token:
     description: GitHub token used for optional pull request commenting.
     required: false
+  upload-to-0x0:
+    description: Upload rendered preview images to https://0x0.st/ so PR comments can embed them directly.
+    required: false
+    default: "false"
   artifact-name:
     description: Name of the uploaded preview artifact.
     required: false

@@ -40,4 +40,5 @@ jobs:
           coordinates: >-
             [{"coordinate":"2701/3408/0","label":"Test coordinate","source":"label:test-pr-comment"}]
           comment: "true"
+          upload-to-0x0: "true"
           github-token: ${{ github.token }}
