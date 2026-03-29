@@ -27,12 +27,27 @@ jobs:
       - name: Build action
         run: npm run build
 
+      - name: Start local renderer
+        env:
+          PUBLISH_MODE: local
+          LOCAL_PUBLISH_DIR: ${{ github.workspace }}/.cloud-run-public
+          PUBLIC_BASE_URL: http://127.0.0.1:8080/static
+        run: |
+          npm run serve &
+          echo $! > renderer.pid
+          sleep 5
+
       - name: Render fixture previews
         uses: ./
         with:
           coordinates: >-
             [{"coordinate":"3222/3218/0","label":"Lumbridge gate"},{"coordinate":"3210/3424/0","label":"Varrock square"}]
           comment: "false"
+          renderer-url: http://127.0.0.1:8080/render
 
       - name: Assert manifest exists
         run: test -f .osrs-coordinate-preview/manifest.json
+
+      - name: Stop local renderer
+        if: always()
+        run: kill "$(cat renderer.pid)"

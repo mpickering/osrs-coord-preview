@@ -13,26 +13,28 @@ interface CliArgs {
 
 async function main() {
   try {
-    const args = parseCliArgs(process.argv.slice(2));
-    const coordinatesRaw = await loadCoordinates(args);
-    const items = parseCoordinateItems(coordinatesRaw);
-    const outputDir = resolveOutputDir(args.outputDir);
-    const manifest = await renderBatch(items, {
-      outputDir,
-      debug: args.debug,
-      logger: (message) => process.stderr.write(`${message}\n`)
-    });
-    process.stdout.write(`${path.join(outputDir, "manifest.json")}\n`);
-    if (manifest.failedCount > 0) {
-      process.exitCode = 1;
-    }
+    process.exitCode = await runCli(process.argv.slice(2));
   } catch (error) {
     process.stderr.write(`${(error as Error).message}\n`);
     process.exitCode = 1;
   }
 }
 
-function parseCliArgs(argv: string[]): CliArgs {
+export async function runCli(argv: string[]): Promise<number> {
+  const args = parseCliArgs(argv);
+  const coordinatesRaw = await loadCoordinates(args);
+  const items = parseCoordinateItems(coordinatesRaw);
+  const outputDir = resolveOutputDir(args.outputDir);
+  const manifest = await renderBatch(items, {
+    outputDir,
+    debug: args.debug,
+    logger: (message) => process.stderr.write(`${message}\n`)
+  });
+  process.stdout.write(`${path.join(outputDir, "manifest.json")}\n`);
+  return manifest.failedCount > 0 ? 1 : 0;
+}
+
+export function parseCliArgs(argv: string[]): CliArgs {
   const parsed = parseArgs({
     args: argv,
     options: {
@@ -67,11 +69,13 @@ function parseCliArgs(argv: string[]): CliArgs {
   return args;
 }
 
-async function loadCoordinates(args: CliArgs): Promise<string> {
+export async function loadCoordinates(args: CliArgs): Promise<string> {
   if (args.coordinates) {
     return args.coordinates;
   }
   return fs.readFile(path.resolve(process.cwd(), args.coordinatesFile!), "utf8");
 }
 
-void main();
+if (import.meta.url === `file://${process.argv[1]}`) {
+  void main();
+}

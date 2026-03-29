@@ -16,7 +16,6 @@ jobs:
       contents: read
       pull-requests: write
       issues: write
-      actions: write
     steps:
       - uses: actions/checkout@v4
 
@@ -40,5 +39,5 @@ jobs:
           coordinates: >-
             [{"coordinate":"2701/3408/0","label":"Test coordinate","source":"label:test-pr-comment"}]
           comment: "true"
-          upload-to-0x0: "true"
+          renderer-url: https://osrs-coordinate-preview-nt7ywvsdgq-nw.a.run.app/render
           github-token: ${{ github.token }}

@@ -6,9 +6,8 @@ async function main() {
     await runAction({
       coordinatesRaw: core.getInput("coordinates", { required: true }),
       comment: core.getBooleanInput("comment"),
-      uploadTo0x0: core.getBooleanInput("upload-to-0x0"),
+      rendererUrl: core.getInput("renderer-url", { required: true }),
       token: core.getInput("github-token") || process.env.GITHUB_TOKEN,
-      artifactName: core.getInput("artifact-name") || "osrs-coordinate-previews",
       outputDir: core.getInput("output-dir") || ".osrs-coordinate-preview"
     });
   } catch (error) {

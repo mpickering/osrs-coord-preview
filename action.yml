@@ -8,17 +8,12 @@ inputs:
     description: Post or update a pull request comment summarizing the rendered previews.
     required: false
     default: "false"
+  renderer-url:
+    description: Full URL of the remote render endpoint.
+    required: true
   github-token:
     description: GitHub token used for optional pull request commenting.
     required: false
-  upload-to-0x0:
-    description: Upload rendered preview images to https://0x0.st/ so PR comments can embed them directly.
-    required: false
-    default: "false"
-  artifact-name:
-    description: Name of the uploaded preview artifact.
-    required: false
-    default: osrs-coordinate-previews
   output-dir:
     description: Directory where previews and manifest are written.
     required: false
@@ -26,8 +21,6 @@ inputs:
 outputs:
   manifest_path:
     description: Path to the generated manifest.json file.
-  artifact_name:
-    description: Name of the uploaded artifact.
   render_count:
     description: Number of successfully rendered previews.
   failed_count:
