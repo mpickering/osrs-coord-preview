@@ -37,7 +37,7 @@ jobs:
         uses: ./
         with:
           coordinates: >-
-            [{"coordinate":"2701/3408/0","label":"Test coordinate","source":"label:test-pr-comment"}]
+            [{"coordinate":"2701/3408/0","label":"Test coordinate","source":"label:test-pr-comment:1"},{"coordinate":"3222/3218/0","label":"Lumbridge gate","source":"label:test-pr-comment:2"},{"coordinate":"2701/3408/5","label":"Invalid plane","source":"label:test-pr-comment:3"}]
           comment: "true"
           renderer-url: https://osrs-coordinate-preview-nt7ywvsdgq-nw.a.run.app/render
           github-token: ${{ github.token }}
