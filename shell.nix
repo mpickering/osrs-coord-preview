@@ -8,6 +8,7 @@ pkgs.mkShell {
     pkg-config
     python3
     vips
+    google-cloud-sdk
   ];
 
   shellHook = ''

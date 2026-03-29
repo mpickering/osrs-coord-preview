@@ -17,10 +17,7 @@ test("buildCommentBody includes item metadata", () => {
         coordinate: "3200/3200/0",
         source: "steps.json:4",
         resolved: { tileX: 12, tileY: 12, pixelX: 128, pixelY: 127 },
-        imageName: "step-1.png",
-        imagePath: "/tmp/step-1.png",
-        artifactUrl: "https://github.com/example/artifact",
-        publishedImageUrl: "https://0x0.st/example.png"
+        imageUrl: "https://storage.googleapis.com/example-bucket/renders/hash/step-1.png"
       }
     ]
   };
@@ -29,5 +26,5 @@ test("buildCommentBody includes item metadata", () => {
   assert.match(body, /OSRS coordinate previews/);
   assert.match(body, /3200\/3200\/0/);
   assert.match(body, /steps\.json:4/);
-  assert.match(body, /0x0\.st\/example\.png/);
+  assert.match(body, /storage\.googleapis\.com\/example-bucket/);
 });

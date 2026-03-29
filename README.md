@@ -2,9 +2,7 @@
 
 
 
-`osrs-coordinate-preview` is a TypeScript GitHub Action and local CLI for rendering preview images for OSRS coordinates during CI. It is intended for workflows where another step computes one or more coordinates and reviewers need a visual check that each marker lands in the expected place.
-
-The action is OSRS-specific in v1. It always renders one image per coordinate, writes a `manifest.json`, uploads the output directory as an artifact, and can optionally post or update a single pull request comment with a summary.
+`osrs-coordinate-preview` is a TypeScript GitHub Action, local CLI, and renderer service for previewing OSRS coordinates. The GitHub Action now acts as a client of a hosted renderer, while the CLI keeps local rendering available for development and manual inspection.
 
 ## Input format
 
@@ -50,13 +48,13 @@ jobs:
         with:
           coordinates: ${{ steps.coords.outputs.coordinates }}
           comment: "true"
+          renderer-url: https://osrs-coordinate-preview-nt7ywvsdgq-nw.a.run.app/render
           github-token: ${{ github.token }}
 ```
 
 Outputs:
 
 - `manifest_path`: path to the generated manifest
-- `artifact_name`: uploaded artifact name
 - `render_count`: successful renders
 - `failed_count`: failed renders
 
@@ -77,6 +75,20 @@ npm run cli -- --coordinates '[{"coordinate":"3200/3200/0","label":"Quest start"
 
 The CLI writes previews and `manifest.json` into `.osrs-coordinate-preview/` by default and prints the manifest path to stdout.
 
+## Hosted renderer
+
+The hosted renderer exposes a `POST /render` endpoint and returns public image URLs. Deployment notes are in [`CLOUD_RUN_FUNCTION.md`](/home/matt/osrs-coord-preview/CLOUD_RUN_FUNCTION.md).
+
+For GCP deployment, there is also a helper script:
+
+```bash
+PROJECT_ID=your-gcp-project \
+REGION=europe-west2 \
+SERVICE_NAME=osrs-coordinate-preview \
+BUCKET_NAME=your-public-preview-bucket \
+./scripts/deploy-cloud-run.sh
+```
+
 ## Repository development
 
 ```bash
@@ -89,6 +101,6 @@ This repo includes a self-test workflow at [`.github/workflows/self-test.yml`](/
 
 ## Notes
 
-- v1 uses RuneScape Wiki rendered map tiles from `https://maps.runescape.wiki/osrs/versions/2026-03-04_a/tiles/rendered/`.
-- The action processes all requested coordinates, writes all successful previews, then fails if any coordinate could not be rendered.
-- PR comments are optional and are posted as a single updatable summary comment rather than inline review comments. When enabled, pass `github-token: ${{ github.token }}`.
+- Rendering uses RuneScape Wiki rendered map tiles from `https://maps.runescape.wiki/osrs/versions/2026-03-04_a/tiles/rendered/`.
+- The GitHub Action no longer renders locally in its main path; it calls a configured remote renderer URL.
+- The local CLI still renders previews directly for development and manual testing.

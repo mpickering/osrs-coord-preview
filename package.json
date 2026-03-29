@@ -9,14 +9,17 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "clean": "rm -rf dist .osrs-coordinate-preview",
+    "clean": "rm -rf dist .osrs-coordinate-preview .osrs-coordinate-preview-direct .cloud-run-public",
+    "gcp-build": "npm run build",
+    "start": "node dist/src/server.js",
     "test": "node --test --import tsx test/*.test.ts",
-    "cli": "tsx src/cli.ts"
+    "cli": "tsx src/cli.ts",
+    "serve": "tsx src/server.ts"
   },
   "dependencies": {
-    "@actions/artifact": "^2.3.2",
     "@actions/core": "^1.11.1",
     "@actions/github": "^6.0.1",
+    "@google-cloud/storage": "^7.16.0",
     "node-addon-api": "^8.5.0",
     "sharp": "^0.34.2"
   },

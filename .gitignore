@@ -1,2 +1,5 @@
 node_modules/
 .osrs-coordinate-preview/
+.osrs-coordinate-preview-direct/
+.osrs-coordinate-preview-smoke/
+.cloud-run-public/

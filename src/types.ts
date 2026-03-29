@@ -30,11 +30,9 @@ export interface RenderSuccess {
   source?: string;
   coordinate: string;
   resolved: TileCoordinate;
-  imagePath: string;
-  imageName: string;
-  artifactName?: string;
-  artifactUrl?: string;
-  publishedImageUrl?: string;
+  imagePath?: string;
+  imageName?: string;
+  imageUrl?: string;
 }
 
 export interface RenderFailure {
@@ -64,4 +62,10 @@ export interface RenderOptions {
   fetchImpl?: typeof fetch;
   debug?: boolean;
   logger?: (message: string) => void;
+}
+
+export interface RenderServiceResponse {
+  renderCount: number;
+  failedCount: number;
+  items: RenderResult[];
 }
