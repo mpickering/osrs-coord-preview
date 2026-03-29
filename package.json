@@ -1,0 +1,29 @@
+{
+  "name": "osrs-coordinate-preview",
+  "version": "0.1.0",
+  "private": true,
+  "description": "GitHub Action and CLI for rendering OSRS coordinate previews.",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "clean": "rm -rf dist .osrs-coordinate-preview",
+    "test": "node --test --import tsx test/*.test.ts",
+    "cli": "tsx src/cli.ts"
+  },
+  "dependencies": {
+    "@actions/artifact": "^2.3.2",
+    "@actions/core": "^1.11.1",
+    "@actions/github": "^6.0.1",
+    "node-addon-api": "^8.5.0",
+    "sharp": "^0.34.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "node-gyp": "^11.2.0",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3"
+  }
+}

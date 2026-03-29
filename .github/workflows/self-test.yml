@@ -1,0 +1,38 @@
+name: Self Test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  self-test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build action
+        run: npm run build
+
+      - name: Render fixture previews
+        uses: ./
+        with:
+          coordinates: >-
+            [{"coordinate":"3222/3218/0","label":"Lumbridge gate"},{"coordinate":"3210/3424/0","label":"Varrock square"}]
+          comment: "false"
+
+      - name: Assert manifest exists
+        run: test -f .osrs-coordinate-preview/manifest.json

@@ -1,0 +1,14 @@
+[
+  {
+    "id": "lumbridge-gate",
+    "label": "Lumbridge gate",
+    "coordinate": "3222/3218/0",
+    "source": "fixtures/coordinates.json:2"
+  },
+  {
+    "id": "varrock-square",
+    "label": "Varrock square",
+    "coordinate": "3210/3424/0",
+    "source": "fixtures/coordinates.json:8"
+  }
+]

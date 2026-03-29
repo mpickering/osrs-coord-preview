@@ -1,0 +1,33 @@
+name: OSRS Coordinate Preview
+description: Render OSRS coordinate previews in CI and optionally comment on pull requests.
+inputs:
+  coordinates:
+    description: JSON array of objects containing coordinate, plus optional id, label, and source fields.
+    required: true
+  comment:
+    description: Post or update a pull request comment summarizing the rendered previews.
+    required: false
+    default: "false"
+  github-token:
+    description: GitHub token used for optional pull request commenting.
+    required: false
+  artifact-name:
+    description: Name of the uploaded preview artifact.
+    required: false
+    default: osrs-coordinate-previews
+  output-dir:
+    description: Directory where previews and manifest are written.
+    required: false
+    default: .osrs-coordinate-preview
+outputs:
+  manifest_path:
+    description: Path to the generated manifest.json file.
+  artifact_name:
+    description: Name of the uploaded artifact.
+  render_count:
+    description: Number of successfully rendered previews.
+  failed_count:
+    description: Number of failed preview renders.
+runs:
+  using: node20
+  main: dist/src/main.js
