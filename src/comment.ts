@@ -12,18 +12,17 @@ export function buildCommentBody(manifest: RenderManifest): string {
     "",
     `Rendered ${manifest.renderCount} preview(s); ${manifest.failedCount} failure(s).`,
     "",
-    "| Item | Coordinate | Source | Status | Preview |",
-    "| --- | --- | --- | --- | --- |"
+    "| Preview | Item | Coordinate | Source |",
+    "| --- | --- | --- | --- |"
   ];
 
   for (const item of manifest.items) {
     const title = item.label ?? item.id;
     const source = item.source ?? "";
-    const status = item.status === "success" ? "rendered" : `failed: ${item.error}`;
     const preview = item.status === "success" && item.imageUrl
       ? `<a href="${item.imageUrl}"><img src="${item.imageUrl}" alt="${escapeAttribute(title)}" width="${COMMENT_IMAGE_WIDTH}" /></a>`
-      : "";
-    lines.push(`| ${escapeCell(title)} | ${escapeCell(item.coordinate)} | ${escapeCell(source)} | ${escapeCell(status)} | ${preview} |`);
+      : escapeCell(item.status === "failure" ? `failed: ${item.error}` : "");
+    lines.push(`| ${preview} | ${escapeCell(title)} | ${escapeCell(item.coordinate)} | ${escapeCell(source)} |`);
   }
 
   lines.push("");
