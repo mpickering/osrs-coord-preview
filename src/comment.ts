@@ -3,6 +3,7 @@ import * as github from "@actions/github";
 import { RenderManifest } from "./types.js";
 
 const COMMENT_MARKER = "<!-- osrs-coordinate-preview -->";
+const COMMENT_IMAGE_WIDTH = 220;
 
 export function buildCommentBody(manifest: RenderManifest): string {
   const lines = [
@@ -11,30 +12,21 @@ export function buildCommentBody(manifest: RenderManifest): string {
     "",
     `Rendered ${manifest.renderCount} preview(s); ${manifest.failedCount} failure(s).`,
     "",
-    "| Item | Coordinate | Source | Status |",
-    "| --- | --- | --- | --- |"
+    "| Item | Coordinate | Source | Status | Preview |",
+    "| --- | --- | --- | --- | --- |"
   ];
 
   for (const item of manifest.items) {
     const title = item.label ?? item.id;
     const source = item.source ?? "";
     const status = item.status === "success" ? "rendered" : `failed: ${item.error}`;
-    lines.push(`| ${escapeCell(title)} | ${escapeCell(item.coordinate)} | ${escapeCell(source)} | ${escapeCell(status)} |`);
+    const preview = item.status === "success" && item.imageUrl
+      ? `<a href="${item.imageUrl}"><img src="${item.imageUrl}" alt="${escapeAttribute(title)}" width="${COMMENT_IMAGE_WIDTH}" /></a>`
+      : "";
+    lines.push(`| ${escapeCell(title)} | ${escapeCell(item.coordinate)} | ${escapeCell(source)} | ${escapeCell(status)} | ${preview} |`);
   }
 
   lines.push("");
-  for (const item of manifest.items) {
-    if (item.status !== "success" || !item.imageUrl) {
-      continue;
-    }
-    lines.push(`### ${item.label ?? item.id}`);
-    lines.push("");
-    lines.push(`![${item.label ?? item.id}](${item.imageUrl})`);
-    lines.push("");
-    lines.push(`[Open image](${item.imageUrl})`);
-    lines.push("");
-  }
-
   lines.push("Images are hosted by the configured renderer service.");
   return lines.join("\n");
 }
@@ -79,4 +71,8 @@ export async function postOrUpdateComment(token: string, manifest: RenderManifes
 
 function escapeCell(value: string): string {
   return value.replace(/\|/g, "\\|").replace(/\n/g, " ");
+}
+
+function escapeAttribute(value: string): string {
+  return value.replace(/"/g, "&quot;");
 }
