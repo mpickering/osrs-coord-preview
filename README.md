@@ -1,5 +1,7 @@
 # OSRS Coordinate Preview
 
+
+
 `osrs-coordinate-preview` is a TypeScript GitHub Action and local CLI for rendering preview images for OSRS coordinates during CI. It is intended for workflows where another step computes one or more coordinates and reviewers need a visual check that each marker lands in the expected place.
 
 The action is OSRS-specific in v1. It always renders one image per coordinate, writes a `manifest.json`, uploads the output directory as an artifact, and can optionally post or update a single pull request comment with a summary.
