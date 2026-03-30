@@ -6,7 +6,7 @@ async function main() {
     await runAction({
       coordinatesRaw: core.getInput("coordinates", { required: true }),
       comment: core.getBooleanInput("comment"),
-      rendererUrl: core.getInput("renderer-url", { required: true }),
+      rendererUrl: core.getInput("renderer-url") || "https://osrs-coordinate-preview-nt7ywvsdgq-nw.a.run.app/render",
       token: core.getInput("github-token") || process.env.GITHUB_TOKEN,
       outputDir: core.getInput("output-dir") || ".osrs-coordinate-preview"
     });

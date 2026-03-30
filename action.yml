@@ -10,7 +10,8 @@ inputs:
     default: "false"
   renderer-url:
     description: Full URL of the remote render endpoint.
-    required: true
+    required: false
+    default: https://osrs-coordinate-preview-nt7ywvsdgq-nw.a.run.app/render
   github-token:
     description: GitHub token used for optional pull request commenting.
     required: false

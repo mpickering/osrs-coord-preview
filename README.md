@@ -46,6 +46,16 @@ Fields:
 
 The action does not render locally. It sends the batch payload to a configured hosted renderer.
 
+Parameters:
+
+| Name | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `coordinates` | `string` | Yes | JSON array using the shared input format. |
+| `renderer-url` | `string` | No | Full `POST /render` endpoint for the hosted renderer. Defaults to the public hosted service for this project. |
+| `comment` | `boolean` | No | Enable PR comment creation/update. Default `false`. |
+| `github-token` | `string` | No | Needed when `comment` is `true`. Usually `${{ github.token }}`. |
+| `output-dir` | `string` | No | Directory where the local manifest is written. Default `.osrs-coordinate-preview`. |
+
 ```yaml
 jobs:
   preview-coordinates:
@@ -62,7 +72,6 @@ jobs:
         with:
           coordinates: ${{ steps.coords.outputs.coordinates }}
           comment: "true"
-          renderer-url: https://osrs-coordinate-preview-nt7ywvsdgq-nw.a.run.app/render
           github-token: ${{ github.token }}
 ```
 
