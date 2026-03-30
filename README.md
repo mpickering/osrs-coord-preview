@@ -16,32 +16,6 @@ The components are split intentionally:
 - The local CLI renders directly using the shared renderer. Use it for development, manual inspection, and debugging.
 - The hosted renderer accepts the same batch payload, renders the images, publishes them to a public bucket, and returns public image URLs.
 
-## Input format
-
-The action accepts a single `coordinates` input containing a JSON array. Each item must include a `coordinate` string in `x/y/plane` form.
-
-```json
-[
-  {
-    "id": "quest-start",
-    "label": "Quest start",
-    "coordinate": "3200/3200/0",
-    "source": "data/quest-steps.json:14"
-  },
-  {
-    "label": "Talk to guide",
-    "coordinate": "3210/3215/0"
-  }
-]
-```
-
-Fields:
-
-- `coordinate`: required, `x/y/plane`
-- `id`: optional stable identifier used for filenames
-- `label`: optional display label for summaries
-- `source`: optional source reference shown in the PR comment
-
 ## Shared input format
 
 The action, CLI, and hosted renderer all accept the same batch JSON array. Each item must include a `coordinate` string in `x/y/plane` form.
